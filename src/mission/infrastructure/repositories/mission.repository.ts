@@ -1,30 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PhotographerModel } from 'src/photographer/domain/model/photographer.model';
+import { IMissionRepository } from 'src/mission/domain/repositories/mission.repository';
 import { Repository } from 'typeorm';
-import { PhotographerEntity } from '../entities/photographer.entity';
-import { IPhotographerRepository } from 'src/photographer/domain/repositories/photographer.repository';
+import { MissionEntity } from '../entities/mission.entity';
+import { MissionModel } from 'src/mission/domain/model/mission.model';
 import { PROJECTED_COORDINATE_SYSTEM_SRID } from 'src/core/domain/srid';
 
 @Injectable()
-export class PhotographerRepository implements IPhotographerRepository {
+export class MissionRepository implements IMissionRepository {
   constructor(
-    @InjectRepository(PhotographerEntity)
-    private readonly photographerEntityRepository: Repository<PhotographerModel>,
+    @InjectRepository(MissionEntity)
+    private readonly missionEntityRepository: Repository<MissionModel>,
   ) {}
-  async insert(photographer: PhotographerModel): Promise<PhotographerModel> {
-    return await this.photographerEntityRepository.save(photographer);
-  }
-  async findId(id: string): Promise<PhotographerModel> {
-    return await this.photographerEntityRepository.findOne({ where: { id } });
+  async insert(mission: MissionModel): Promise<MissionModel> {
+    return await this.missionEntityRepository.save(mission);
   }
   async find(
     longitude: number,
     latitude: number,
     range: number,
-  ): Promise<PhotographerModel[]> {
-    return await this.photographerEntityRepository
-      .createQueryBuilder('photographer')
+  ): Promise<MissionModel[]> {
+    return await this.missionEntityRepository
+      .createQueryBuilder('mission')
       .select([
         '*',
         'ST_Distance(ST_Transform(location,3857), ST_Transform(ST_SetSRID(ST_GeomFromGeoJSON(:origin), ST_SRID(location)),3857))/1000 AS distance',
@@ -42,6 +39,9 @@ export class PhotographerRepository implements IPhotographerRepository {
         range: range * 1000, //KM conversion
       })
       .orderBy('distance', 'ASC')
-      .getRawOne();
+      .getRawMany();
+  }
+  async findById(id: string): Promise<MissionModel> {
+    return await this.missionEntityRepository.findOne({ where: { id } });
   }
 }

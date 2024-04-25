@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PhotographerModule } from './photographer/app/photographer.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MatchingModule } from './matching/app/matching.module';
+import { MissionModule } from './mission/app/mission.module';
 import * as path from 'path';
 
 @Module({
@@ -22,7 +22,7 @@ import * as path from 'path';
         };
       },
     }),
-    MatchingModule,
+    MissionModule,
   ],
   controllers: [],
   providers: [],

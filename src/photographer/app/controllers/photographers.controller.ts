@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import { PhotographerModel } from 'src/photographer/domain/model/photographer.model';
 import { AddPhotographerDTO } from './addPhotographer.dto';
 import {
@@ -23,8 +31,11 @@ export class PhotographersController {
       addPhotographerDTO.latitude,
     );
   }
-  @Get('/')
-  async find(): Promise<PhotographerModel[]> {
-    return [];
+
+  @Get('/:photographerId/browse-missions')
+  async browseMissions(
+    @Param('phoographerId', new ParseUUIDPipe()) photographerId: string,
+  ) {
+    return;
   }
 }

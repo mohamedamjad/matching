@@ -1,22 +1,24 @@
+import { PackageEnum } from 'src/core/domain/package.enum';
 import { GEOGRAPHIC_COORDINATE_SYSTEM_SRID } from 'src/core/domain/srid';
-import { PhotographerModel } from 'src/photographer/domain/model/photographer.model';
+import { MissionModel } from 'src/mission/domain/model/mission.model';
 import { EntitySchema } from 'typeorm';
 import { BaseColumnSchemaPart } from 'src/core/infrastructure/base.schema';
 
-export const PhotographerEntity = new EntitySchema<PhotographerModel>({
-  name: 'photographer',
+export const MissionEntity = new EntitySchema<MissionModel>({
+  name: 'mission',
   columns: {
     ...BaseColumnSchemaPart,
-    firstName: {
-      type: String,
-    },
-    lastName: {
+    date: {
       type: String,
     },
     location: {
       type: 'geometry',
       spatialFeatureType: 'Point',
       srid: GEOGRAPHIC_COORDINATE_SYSTEM_SRID,
+    },
+    package: {
+      type: 'enum',
+      enum: PackageEnum,
     },
   },
 });

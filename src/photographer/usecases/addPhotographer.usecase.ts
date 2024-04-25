@@ -12,7 +12,6 @@ export class AddPhotographerUseCases {
     latitude: number,
   ): Promise<PhotographerModel> {
     const photographer = new PhotographerModel();
-    photographer.id = 'sdfsd';
     photographer.firstName = firstName;
     photographer.lastName = lastName;
     photographer.location = {
