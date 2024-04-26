@@ -14,6 +14,7 @@ export class BrowseMissionsForPhotographerUseCases {
       photographer.location.coordinates[0],
       photographer.location.coordinates[1],
       100,
+      photographer.packageTypes,
     );
   }
 }

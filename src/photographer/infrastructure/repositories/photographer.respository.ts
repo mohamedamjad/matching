@@ -4,7 +4,6 @@ import { PhotographerModel } from 'src/photographer/domain/model/photographer.mo
 import { Repository } from 'typeorm';
 import { PhotographerEntity } from '../entities/photographer.entity';
 import { IPhotographerRepository } from 'src/photographer/domain/repositories/photographer.repository';
-import { PROJECTED_COORDINATE_SYSTEM_SRID } from 'src/core/domain/srid';
 import { PackageEnum } from 'src/core/domain/package.enum';
 
 @Injectable()
@@ -17,7 +16,6 @@ export class PhotographerRepository implements IPhotographerRepository {
     return await this.photographerEntityRepository.save(photographer);
   }
   async findById(id: string): Promise<PhotographerModel> {
-    console.log('id', id);
     return await this.photographerEntityRepository.findOne({ where: { id } });
   }
   async find(
@@ -39,13 +37,11 @@ export class PhotographerRepository implements IPhotographerRepository {
         packages: [packageType],
       })
       .setParameters({
-        // stringify GeoJSON
         origin: JSON.stringify({
           type: 'Point',
           coordinates: [longitude, latitude],
         }),
-        PCSSRID: PROJECTED_COORDINATE_SYSTEM_SRID,
-        range: range * 1000, //KM conversion
+        range: range * 1000,
       })
       .orderBy('distance', 'ASC')
       .getRawOne();

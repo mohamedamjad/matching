@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { MissionEntity } from '../entities/mission.entity';
 import { MissionModel } from 'src/mission/domain/model/mission.model';
 import { PROJECTED_COORDINATE_SYSTEM_SRID } from 'src/core/domain/srid';
+import { PackageEnum } from 'src/core/domain/package.enum';
 
 @Injectable()
 export class MissionRepository implements IMissionRepository {
@@ -19,6 +20,7 @@ export class MissionRepository implements IMissionRepository {
     longitude: number,
     latitude: number,
     range: number,
+    packageTypes: PackageEnum[],
   ): Promise<MissionModel[]> {
     return await this.missionEntityRepository
       .createQueryBuilder('mission')
@@ -29,6 +31,7 @@ export class MissionRepository implements IMissionRepository {
       .where(
         'ST_DWithin(ST_Transform(location,3857), ST_Transform(ST_SetSRID(ST_GeomFromGeoJSON(:origin), ST_SRID(location)),3857) ,:range)',
       )
+      .andWhere('mission.package @> :packages', { packages: packageTypes })
       .setParameters({
         // stringify GeoJSON
         origin: JSON.stringify({

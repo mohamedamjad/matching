@@ -9,7 +9,7 @@ export const MissionEntity = new EntitySchema<MissionModel>({
   columns: {
     ...BaseColumnSchemaPart,
     date: {
-      type: String,
+      type: 'time with time zone',
     },
     location: {
       type: 'geometry',

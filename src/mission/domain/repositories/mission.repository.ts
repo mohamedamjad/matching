@@ -1,3 +1,4 @@
+import { PackageEnum } from 'src/core/domain/package.enum';
 import { MissionModel } from '../model/mission.model';
 
 export interface IMissionRepository {
@@ -6,6 +7,7 @@ export interface IMissionRepository {
     longitude: number,
     latitude: number,
     range: number,
+    packageTypes: PackageEnum[],
   ): Promise<MissionModel[]>;
   findById(id: string): Promise<MissionModel>;
 }

@@ -16,6 +16,12 @@ export class PhotographerRepositoryMock implements IPhotographerRepository {
   async findById(id: string): Promise<PhotographerModel> {
     return this.photographers.get(id);
   }
+  async lockForBooking(
+    missionId: string,
+    photographerId: string,
+  ): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
   find(
     longitude: number,
     latitude: number,
