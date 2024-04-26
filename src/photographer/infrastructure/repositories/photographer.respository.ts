@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { PhotographerEntity } from '../entities/photographer.entity';
 import { IPhotographerRepository } from 'src/photographer/domain/repositories/photographer.repository';
 import { PROJECTED_COORDINATE_SYSTEM_SRID } from 'src/core/domain/srid';
+import { PackageEnum } from 'src/core/domain/package.enum';
 
 @Injectable()
 export class PhotographerRepository implements IPhotographerRepository {
@@ -15,12 +16,14 @@ export class PhotographerRepository implements IPhotographerRepository {
   async insert(photographer: PhotographerModel): Promise<PhotographerModel> {
     return await this.photographerEntityRepository.save(photographer);
   }
-  async findId(id: string): Promise<PhotographerModel> {
+  async findById(id: string): Promise<PhotographerModel> {
+    console.log('id', id);
     return await this.photographerEntityRepository.findOne({ where: { id } });
   }
   async find(
     longitude: number,
     latitude: number,
+    packageType: PackageEnum,
     range: number,
   ): Promise<PhotographerModel[]> {
     return await this.photographerEntityRepository
@@ -32,6 +35,9 @@ export class PhotographerRepository implements IPhotographerRepository {
       .where(
         'ST_DWithin(ST_Transform(location,3857), ST_Transform(ST_SetSRID(ST_GeomFromGeoJSON(:origin), ST_SRID(location)),3857) ,:range)',
       )
+      .andWhere('photographer.packageTypes @> :packages', {
+        packages: [packageType],
+      })
       .setParameters({
         // stringify GeoJSON
         origin: JSON.stringify({

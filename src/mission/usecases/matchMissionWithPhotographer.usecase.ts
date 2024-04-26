@@ -11,6 +11,7 @@ export class MatchMissionWithPhotographerUseCases {
     return await this.photographerRepository.find(
       mission.location.coordinates[0],
       mission.location.coordinates[1],
+      mission.package,
       1,
     );
   }

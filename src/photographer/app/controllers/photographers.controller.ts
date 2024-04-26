@@ -13,12 +13,18 @@ import {
   ADD_PHOTOGRAPHER_USECASES,
   AddPhotographerUseCases,
 } from 'src/photographer/usecases/addPhotographer.usecase';
+import {
+  BROWSE_MISSIONS_FOR_PHOTOGRAPHER_USECASES,
+  BrowseMissionsForPhotographerUseCases,
+} from 'src/photographer/usecases/browseMissionsForPhotographer.usecase';
 
 @Controller('photographers')
 export class PhotographersController {
   constructor(
     @Inject(ADD_PHOTOGRAPHER_USECASES)
     private readonly addPhotographerUseCases: AddPhotographerUseCases,
+    @Inject(BROWSE_MISSIONS_FOR_PHOTOGRAPHER_USECASES)
+    private readonly browseMissionsForPhotographerUseCases: BrowseMissionsForPhotographerUseCases,
   ) {}
   @Post('/')
   async insert(
@@ -29,13 +35,17 @@ export class PhotographersController {
       addPhotographerDTO.lastName,
       addPhotographerDTO.longitude,
       addPhotographerDTO.latitude,
+      addPhotographerDTO.packageTypes,
     );
   }
 
   @Get('/:photographerId/browse-missions')
   async browseMissions(
-    @Param('phoographerId', new ParseUUIDPipe()) photographerId: string,
+    @Param('photographerId', new ParseUUIDPipe()) photographerId: string,
   ) {
-    return;
+    console.log(photographerId);
+    return await this.browseMissionsForPhotographerUseCases.execute(
+      photographerId,
+    );
   }
 }
